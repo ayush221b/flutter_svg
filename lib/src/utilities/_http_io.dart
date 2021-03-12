@@ -28,7 +28,9 @@ Future<Uint8List> httpGet(String url, {Map<String, String> headers}) async {
     }
 
     _responseBytes = await consolidateHttpClientResponseBytes(response);
-    _putFileInCache(_hash, _responseBytes);
+    if (_responseBytes != null) {
+      _putFileInCache(_hash, _responseBytes);
+    }
   } else {
     _responseBytes = _cachedFile.readAsBytesSync();
   }
@@ -38,7 +40,7 @@ Future<Uint8List> httpGet(String url, {Map<String, String> headers}) async {
 
 Future<File> _getFileFromCache(String hash) async {
   try {
-    return (await DefaultCacheManager().getFileFromCache(hash)).file;
+    return (await DefaultCacheManager().getFileFromCache(hash))?.file;
   } catch (err, stacktrace) {
     print(err);
     print(stacktrace);
